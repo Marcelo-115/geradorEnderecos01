@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gerador de Endereços</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="formulario">
+  <h1>Gerador de Endereços</h1>
+  <label for="numeroRua">Número da Rua:</label> <br>
+  <input type="number" id="numeroRua" placeholder="Digite o número da rua"><br><br>
+  <label for="andaresPorPredio">Quantidade de Andares por Prédio:</label> <br>
+  <input type="number" id="andaresPorPredio" placeholder="Digite a quantidade de andares"><br><br>
+  
+  <label for="apartamentosPorAndar">Quantidade de Apartamentos por Andar:</label> <br>
+  <input type="number" id="apartamentosPorAndar" placeholder="Digite a quantidade de apartamentos"><br><br>
+  
+  <button id="gerarEnderecos">Gerar Endereços</button>
+  
+  <div id="resultado">
+    <!-- Os endereços gerados aparecerão aqui -->
+  </div><!---Final Resultado----->
+</div> <!---Final formulario----->
+  <script>
+    // Configurações fixas para o intervalo de prédios
+    const primeiroPredio = 1; // Número do primeiro prédio
+    const ultimoPredio = 52; // Número do último prédio
+
+    // Função para gerar os endereços
+    function gerarEnderecos(rua, primeiroPredio, ultimoPredio, andaresPorPredio, apartamentosPorAndar) {
+      const enderecos = [];
+
+      for (let predio = primeiroPredio; predio <= ultimoPredio; predio++) {
+        for (let andar = 1; andar <= andaresPorPredio; andar++) {
+          for (let apt = 1; apt <= apartamentosPorAndar; apt++) {
+            // Calcula o número do apartamento
+            const numApartamento = andar * 100 + apt; 
+            // Cria o endereço completo
+            const endereco = `${rua}.${String(predio).padStart(2, "0")}.${String(andar).padStart(2, "0")}.${numApartamento}`;
+            enderecos.push(endereco);
+          }
+        }
+      }
+
+      return enderecos;
+    }
+
+    // Evento de clique para gerar os endereços
+    document.getElementById("gerarEnderecos").addEventListener("click", () => {
+      const rua = document.getElementById("numeroRua").value; // Obtém o número da rua do input
+      const andaresPorPredio = document.getElementById("andaresPorPredio").value; // Obtém a quantidade de andares
+      const apartamentosPorAndar = document.getElementById("apartamentosPorAndar").value; // Obtém a quantidade de apartamentos
+      const resultadoDiv = document.getElementById("resultado");
+      resultadoDiv.innerHTML = ""; // Limpa resultados anteriores
+
+      // Validações de entrada
+      if (!rua || !andaresPorPredio || !apartamentosPorAndar || andaresPorPredio <= 0 || apartamentosPorAndar <= 0) {
+        alert("Por favor, preencha todos os campos corretamente!");
+        return;
+      }
+
+      // Gera os endereços
+      const enderecosGerados = gerarEnderecos(
+        rua,
+        primeiroPredio,
+        ultimoPredio,
+        parseInt(andaresPorPredio),
+        parseInt(apartamentosPorAndar)
+      );
+
+      // Mostra os endereços na página
+      enderecosGerados.forEach((endereco) => {
+        const p = document.createElement("p");
+        p.textContent = endereco;
+        resultadoDiv.appendChild(p);
+      });
+    });
+  </script>
+</body>
+</html>
